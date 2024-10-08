@@ -26,7 +26,7 @@ function updateTimeAndDate() {
 
 // Update time and date every second
 setInterval(updateTimeAndDate, 1000);
-
+/*
 // Chart.js setup for each individual chart
 const temperatureCtx = document.getElementById('temperatureChart').getContext('2d');
 const humidityCtx = document.getElementById('humidityChart').getContext('2d');
@@ -165,7 +165,70 @@ const intensityChart = new Chart(intensityCtx, {
             }
         }
     }
-});
+});*/
+
+// Fetch the last 12 hours of sensor data and display in a chart
+function fetchSensorHistory() {
+    fetch('http://<raspberry-pi-ip>:5000/sensor/history')
+        .then(response => response.json())
+        .then(data => {
+            const labels = data.map(item => {
+                const date = new Date(item.timestamp * 1000);
+                return `${date.getHours()}:${date.getMinutes()}`;
+            });
+
+            const temperatureData = data.map(item => item.temperature);
+            const humidityData = data.map(item => item.humidity);
+            const intensityData = data.map(item => item.intensity);
+
+            // Create chart for temperature
+            createChart('temperatureChart', labels, temperatureData, 'Temperature (°C)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 1)');
+            // Create chart for humidity
+            createChart('humidityChart', labels, humidityData, 'Humidity (%)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
+            // Create chart for light intensity
+            createChart('intensityChart', labels, intensityData, 'Light Intensity (lx)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+        })
+        .catch(error => console.error('Error fetching sensor history:', error));
+}
+
+// Function to create a chart
+function createChart(elementId, labels, data, label, backgroundColor, borderColor) {
+    const ctx = document.getElementById(elementId).getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: label,
+                data: data,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 1,
+                fill: true
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'category',
+                    title: {
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: label
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Fetch and display history on page load
+fetchSensorHistory();
 
 // Function to fetch live sensor data
 function fetchSensorData() {
