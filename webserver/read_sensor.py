@@ -50,7 +50,7 @@ def index():
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #d6f9d5
+            background-color: #d6f9d5;
             display: flex;
             flex-direction: column;
             align-items: center;
