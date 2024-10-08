@@ -104,7 +104,7 @@ def index():
                 <p id="date"></p>
                 <p id="temperature">Temperature: --°C</p>
                 <p id="humidity">Humidity: --%</p>
-                <p id="intensity">Pressure: -- lx</p>
+                <p id="intensity">Pressure: -- hPa</p>
             </div>
         </div>
         
