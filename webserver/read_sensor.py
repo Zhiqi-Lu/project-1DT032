@@ -104,7 +104,7 @@ def index():
                 <p id="date"></p>
                 <p id="temperature">Temperature: --°C</p>
                 <p id="humidity">Humidity: --%</p>
-                <p id="intensity">Light Intensity: -- lx</p>
+                <p id="intensity">Pressure: -- lx</p>
             </div>
         </div>
         
@@ -121,7 +121,7 @@ def index():
                 </div>
                 <div class="chart-container">
                     <h3>Light Intensity</h3>
-                    <canvas id="intensityChart"></canvas>
+                    <canvas id="PressureChart"></canvas>
                 </div>
             </section>
         </div>
@@ -135,7 +135,7 @@ def index():
                 .then(data => {
                     document.getElementById('temperature').textContent = 'Temperature: ' + data.temperature + '°C';
                     document.getElementById('humidity').textContent = 'Humidity: ' + data.humidity + '%';
-                    document.getElementById('intensity').textContent = 'Light Intensity: ' + data.intensity + ' lx';
+                    document.getElementById('intensity').textContent = 'Pressure: ' + data.intensity + ' lx';
                 })
                 .catch(error => console.error('Error fetching current sensor data:', error));
         }
@@ -157,7 +157,7 @@ def index():
                     // Create charts
                     createChart('temperatureChart', labels, temperatureData, 'Temperature (°C)', 'rgba(255, 99, 132, 0.2)', 'rgba(255, 99, 132, 1)');
                     createChart('humidityChart', labels, humidityData, 'Humidity (%)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)');
-                    createChart('intensityChart', labels, intensityData, 'Light Intensity (lx)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
+                    createChart('PressureChart', labels, intensityData, 'Pressure (hPa)', 'rgba(75, 192, 192, 0.2)', 'rgba(75, 192, 192, 1)');
                 })
                 .catch(error => console.error('Error fetching sensor history:', error));
         }
