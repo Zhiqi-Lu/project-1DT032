@@ -5,8 +5,8 @@ from threading import Thread
 
 app = Flask(__name__)
 sense = SenseHat()
-sense.color.gain = 60
-sense.color.integration_cycles = 128
+sense.colour.gain = 60
+sense.colour.integration_cycles = 128
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
