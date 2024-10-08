@@ -5,8 +5,6 @@ from threading import Thread
 
 app = Flask(__name__)
 sense = SenseHat()
-sense.color.gain = 60
-sense.color.integration_cycles = 128
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
@@ -15,8 +13,7 @@ def get_sensor_data():
     return {
         'temperature': round(sense.get_temperature(), 2),
         'humidity': round(sense.get_humidity(), 2),
-        'pressure': round(sense.get_pressure(), 2),
-        'intensity': round(sense.colour.clear_raw),
+        'intensity': round(sense.get_pressure(), 2),  # Assuming pressure as intensity
         'timestamp': time.time()
     }
 
@@ -107,7 +104,6 @@ def index():
                 <p id="date"></p>
                 <p id="temperature">Temperature: --°C</p>
                 <p id="humidity">Humidity: --%</p>
-                <p id="pressure">Pressure: -- lx</p>
                 <p id="intensity">Light Intensity: -- lx</p>
             </div>
         </div>

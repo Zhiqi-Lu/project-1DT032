@@ -235,12 +235,11 @@ function fetchSensorData() {
     fetch('http://<raspberry-pi-ip>:5000/sensor')
         .then(response => response.json())
         .then(data => {
-            const { temperature, humidity, pressure, intensity } = data;
+            const { temperature, humidity, intensity } = data;
 
             // Update the temperature, humidity, and intensity on the dashboard
             document.getElementById('temperature').innerText = `${temperature}°C`;
             document.getElementById('humidity').innerText = `${humidity}%`;
-            document.getElementById('pressure').innerText = `${pressure}%`;
             document.getElementById('intensity').innerText = `${intensity} lx`;
 
             // Update background color based on temperature
