@@ -49,6 +49,26 @@ function fetchDesiredValue() {
         .catch(error => console.error('Error fetching desired value:', error));
 }
 
+function fetchAlert() {
+    fetch('/tolerance')
+        .then(response => response.json())
+        .then(data => {
+            const tempAlert = data.tempAlert;
+            const humiAlert = data.humiAlert;
+
+            if (tempAlert && humiAlert) {
+                window.alert("Temperature and Humidity are out of desired value range")
+            }
+            else if (tempAlert) {
+                window.alert("Temperature is out of desired value range")
+            }
+            else if (humiAlert) {
+                window.alert("Humidity is out of desired value range")
+            }
+        })
+        .catch(error => console.error('Error fetching alert status:', error));
+}
+
 // Function to create a chart
 function createChart(elementId, labels, data, label, backgroundColor, borderColor) {
     const ctx = document.getElementById(elementId).getContext('2d');
@@ -163,6 +183,7 @@ fetchCurrentSensorData();
 fetchSensorHistory();
 fetchDesiredValue();
 setInterval(fetchCurrentSensorData, 300000); // Refresh every 5 minutes
+setInterval(fetchAlert, 300000)
 setInterval(fetchSensorHistory, 300000);     // Refresh chart data every 5 minutes
 setInterval(updateTime, 1000);               // Update time every second
 window.onload=function(){

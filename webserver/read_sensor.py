@@ -1,5 +1,3 @@
-from xml.etree.ElementTree import tostring
-
 from flask import Flask, jsonify, render_template_string, render_template, request
 # from sense_hat import SenseHat
 import time
@@ -48,6 +46,26 @@ def get_current_sensor_data():
 def get_sensor_history():
     # Return the last 12 hours of sensor data
     return jsonify(data_history)
+
+@app.route('/tolerance')
+def get_tolerance():
+    global desired_min_temp
+    global desired_max_temp
+    global desired_min_humi
+    global desired_max_humi
+
+    temp_flag = False
+    humi_flag = False
+    env_data = get_sensor_data()
+    if desired_min_temp >= 0 and env_data['temperature'] < desired_min_temp:
+        temp_flag = True
+    if 0 <= desired_max_temp <= 100 and env_data['temperature'] > desired_max_temp:
+        temp_flag = True
+    if desired_min_humi >= 0 and env_data['humidity'] < desired_min_humi:
+        humi_flag = True
+    if 0 <= desired_max_humi <= 100 and env_data['humidity'] > desired_max_humi:
+        humi_flag = True
+    return jsonify({'tempAlert': temp_flag, 'humiAlert': humi_flag})
 
 @app.route('/desiredValue')
 def get_desired_values():
