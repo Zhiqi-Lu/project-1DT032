@@ -83,16 +83,28 @@ def upload():
     global desired_max_humi
 
     if 'minTemp' in request.form:
-        desired_min_temp = float(request.form.get('minTemp'))
+        payload = float(request.form.get('minTemp'))
+        if 0 < desired_max_temp < payload:
+            return jsonify({'message': 'minimum desired temperature must be smaller than desired maximum temperature'}), 400
+        desired_min_temp = payload
         return jsonify({'message': 'desire min temp received successful'})
     elif 'maxTemp' in request.form:
-        desired_max_temp = float(request.form.get('maxTemp'))
+        payload = float(request.form.get('maxTemp'))
+        if payload < desired_min_temp:
+            return jsonify({'message': 'maximum desired temperature must be greater than desired minimum temperature'}), 400
+        desired_max_temp = payload
         return jsonify({'message': 'desire max temp received successful'})
     elif 'minHumi' in request.form:
-        desired_min_humi = float(request.form.get('minHumi'))
+        payload = float(request.form.get('minHumi'))
+        if 0 < desired_max_humi < payload:
+            return jsonify({'message': 'minimum desired humidity must be smaller than desired maximum humidity'}), 400
+        desired_min_humi = payload
         return jsonify({'message': 'desire min humi received successful'})
     else:
-        desired_max_humi = float(request.form.get('maxHumi'))
+        payload = float(request.form.get('maxHumi'))
+        if payload < desired_min_humi:
+            return jsonify({'message': 'maximum desired humidity must be greater than desired maximum humidity'}), 400
+        desired_max_humi = payload
         return jsonify({'message': 'desire max humi received successful'})
 
 @app.route('/')

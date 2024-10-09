@@ -170,7 +170,8 @@ async function handleFormSubmission(event, fieldName) {
             console.log('desire value setting successful: ' + JSON.stringify(result));
             updateDesiredValue(fieldName, desiredValue)
         } else {
-            alert('Failed to set desired value');
+            const result = await response.json();
+            alert(result.message);
         }
     } catch (error) {
         console.error('Error:', error);
