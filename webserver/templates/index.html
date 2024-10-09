@@ -20,6 +20,38 @@
                 <p id="humidity">Humidity: --%</p>
                 <p id="intensity">Pressure: -- hPa</p>
             </div>
+
+            <form id="uploadMinTemp">
+                <span> The current minimum desired temperature is: 00.00 </span>
+                <br>
+                <label for="minTemp">Please set the minimum desired temperature:</label>
+                <input type="number" id="minTemp" name="minTemp">
+                <button type="submit">Submit</button>
+            </form>
+
+            <form id="uploadMaxTemp">
+                <span> The current maximum desired temperature is: 30.33 </span>
+                <br>
+                <label for="maxTemp">Please set the maximum desired temperature:</label>
+                <input type="number" id="maxTemp" name="maxTemp">
+                <button type="submit">Submit</button>
+            </form>
+
+            <form id="uploadMinHumi">
+                <span> The current minimum desired humidity is: 20.00 </span>
+                <br>
+                <label for="minHumi">Please set the minimum desired humidity:</label>
+                <input type="number" id="minHumi" name="minHumi">
+                <button type="submit">Submit</button>
+            </form>
+
+            <form id="uploadMaxHumi">
+                <span> The current maximum desired humidity is: 50.00 </span>
+                <br>
+                <label for="maxHumi">Please set the maximum desired Humidity:</label>
+                <input type="number" id="maxHumi" name="maxHumi">
+                <button type="submit">Submit</button>
+            </form>
         </div>
 
         <!-- Right Column for Charts -->

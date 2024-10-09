@@ -77,9 +77,49 @@ function updateTime() {
     document.getElementById('date').textContent = dateString;
 }
 
+async function handleFormSubmission(event, fieldName) {
+        event.preventDefault();  // Prevent the default form submission
+
+        const formData = new FormData();
+
+        // Dynamically append the field based on the provided field name
+        formData.append(fieldName, document.getElementById(fieldName).value);
+
+        try {
+            const response = await fetch(window.location.href + 'upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('desire value setting successful: ' + JSON.stringify(result));
+            } else {
+                alert('Failed to set desired value');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while setting desired value');
+        }
+    }
+
 // Fetch sensor data and update every 5 minutes
 fetchCurrentSensorData();
 fetchSensorHistory();
 setInterval(fetchCurrentSensorData, 300000); // Refresh every 5 minutes
 setInterval(fetchSensorHistory, 300000);     // Refresh chart data every 5 minutes
 setInterval(updateTime, 1000);               // Update time every second
+window.onload=function(){
+    document.getElementById('uploadMinTemp').addEventListener('submit', function(event) {
+        handleFormSubmission(event, 'minTemp');
+    });
+    document.getElementById('uploadMaxTemp').addEventListener('submit', function(event) {
+        handleFormSubmission(event, 'maxTemp');
+    });
+    document.getElementById('uploadMinHumi').addEventListener('submit', function(event) {
+        handleFormSubmission(event, 'minHumi');
+    });
+    document.getElementById('uploadMaxHumi').addEventListener('submit', function(event) {
+        handleFormSubmission(event, 'maxHumi');
+    });
+}

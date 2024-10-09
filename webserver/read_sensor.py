@@ -1,21 +1,33 @@
-from flask import Flask, jsonify, render_template_string, render_template
-from sense_hat import SenseHat
+from xml.etree.ElementTree import tostring
+
+from flask import Flask, jsonify, render_template_string, render_template, request
+# from sense_hat import SenseHat
 import time
 from threading import Thread
 
 app = Flask(__name__)
-sense = SenseHat()
+# sense = SenseHat()
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
+desired_min_temp = 0
+desired_max_temp = 100
+desired_min_humi = 0
+desired_max_humi = 100
 
 def get_sensor_data():
     return {
-        'temperature': round(sense.get_temperature(), 2),
-        'humidity': round(sense.get_humidity(), 2),
-        'intensity': round(sense.get_pressure(), 2),  # Assuming pressure as intensity
+        'temperature': 10.11,
+        'humidity': 20.22,
+        'intensity': 1069,  # Assuming pressure as intensity
         'timestamp': time.time()
     }
+    # return {
+    #     'temperature': round(sense.get_temperature(), 2),
+    #     'humidity': round(sense.get_humidity(), 2),
+    #     'intensity': round(sense.get_pressure(), 2),  # Assuming pressure as intensity
+    #     'timestamp': time.time()
+    # }
 
 # Function to record data every 5 minutes
 def record_sensor_data():
@@ -36,6 +48,30 @@ def get_current_sensor_data():
 def get_sensor_history():
     # Return the last 12 hours of sensor data
     return jsonify(data_history)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    global desired_min_temp
+    global desired_max_temp
+    global desired_min_humi
+    global desired_max_humi
+
+    if 'minTemp' in request.form:
+        desired_min_temp = request.form.get('minTemp')
+        print("received min temp: " + desired_min_temp)
+        return jsonify({'message': 'desire min temp received successful'})
+    elif 'maxTemp' in request.form:
+        desired_max_temp = request.form.get('maxTemp')
+        print("received max temp: " + desired_max_temp)
+        return jsonify({'message': 'desire max temp received successful'})
+    elif 'minHumi' in request.form:
+        desired_min_humi = request.form.get('minHumi')
+        print("received min humi: " + desired_min_humi)
+        return jsonify({'message': 'desire min humi received successful'})
+    else:
+        desired_max_humi = request.form.get('maxHumi')
+        print("received max humi: " + desired_max_humi)
+        return jsonify({'message': 'desire max humi received successful'})
 
 @app.route('/')
 def index():
