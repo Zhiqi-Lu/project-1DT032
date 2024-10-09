@@ -32,6 +32,23 @@ function fetchSensorHistory() {
         .catch(error => console.error('Error fetching sensor history:', error));
 }
 
+function fetchDesiredValue() {
+    fetch('/desiredValue')
+        .then(response => response.json())
+        .then(data => {
+            const minTemp = data.minTemp;
+            const maxTemp = data.maxTemp;
+            const minHumi = data.minHumi;
+            const maxHumi = data.maxHumi;
+
+            updateDesiredValue('minTemp', minTemp)
+            updateDesiredValue('maxTemp', maxTemp)
+            updateDesiredValue('minHumi', minHumi)
+            updateDesiredValue('maxHumi', maxHumi)
+        })
+        .catch(error => console.error('Error fetching desired value:', error));
+}
+
 // Function to create a chart
 function createChart(elementId, labels, data, label, backgroundColor, borderColor) {
     const ctx = document.getElementById(elementId).getContext('2d');
@@ -79,16 +96,36 @@ function updateTime() {
 
 function updateDesiredValue(fieldName, desiredValue) {
     if (fieldName == 'minTemp') {
-        document.getElementById('minTempSpan').textContent = "The current minimum desired temperature is:" + desiredValue
+        if (desiredValue < 0 || desiredValue > 100) {
+            document.getElementById('minTempSpan').textContent = "No desired minimum temperature"
+        }
+        else {
+            document.getElementById('minTempSpan').textContent = "The current minimum desired temperature is:" + desiredValue
+        }
     }
     else if (fieldName == 'maxTemp') {
-        document.getElementById('maxTempSpan').textContent = "The current maximum desired temperature is:" + desiredValue
+        if (desiredValue < 0 || desiredValue > 100) {
+            document.getElementById('maxTempSpan').textContent = "No desired maximum temperature"
+        }
+        else {
+            document.getElementById('maxTempSpan').textContent = "The current maximum desired temperature is:" + desiredValue
+        }
     }
     else if (fieldName == 'minHumi') {
-        document.getElementById('minHumiSpan').textContent = "The current minimum desired humidity is:" + desiredValue
+        if (desiredValue < 0 || desiredValue > 100) {
+            document.getElementById('minHumiSpan').textContent = "No desired minimum humidity"
+        }
+        else {
+            document.getElementById('minHumiSpan').textContent = "The current minimum desired humidity is:" + desiredValue
+        }
     }
     else {
-        document.getElementById('maxHumiSpan').textContent = "The current maximum desired humidity is:" + desiredValue
+        if (desiredValue < 0 || desiredValue > 100) {
+            document.getElementById('maxHumiSpan').textContent = "No desired maximum humidity"
+        }
+        else {
+            document.getElementById('maxHumiSpan').textContent = "The current maximum desired humidity is:" + desiredValue
+        }
     }
 }
 
@@ -124,6 +161,7 @@ async function handleFormSubmission(event, fieldName) {
 // Fetch sensor data and update every 5 minutes
 fetchCurrentSensorData();
 fetchSensorHistory();
+fetchDesiredValue();
 setInterval(fetchCurrentSensorData, 300000); // Refresh every 5 minutes
 setInterval(fetchSensorHistory, 300000);     // Refresh chart data every 5 minutes
 setInterval(updateTime, 1000);               // Update time every second

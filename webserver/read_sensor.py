@@ -10,10 +10,10 @@ app = Flask(__name__)
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
-desired_min_temp = 0.0
-desired_max_temp = 100.0
-desired_min_humi = 0.0
-desired_max_humi = 100.0
+desired_min_temp = -1.0
+desired_max_temp = -1.0
+desired_min_humi = -1.0
+desired_max_humi = -1.0
 
 def get_sensor_data():
     return {
@@ -48,6 +48,14 @@ def get_current_sensor_data():
 def get_sensor_history():
     # Return the last 12 hours of sensor data
     return jsonify(data_history)
+
+@app.route('/desiredValue')
+def get_desired_values():
+    return jsonify({
+        'minTemp': desired_min_temp,
+        'maxTemp': desired_max_temp,
+        'minHumi': desired_min_humi,
+        'maxHumi': desired_max_humi})
 
 @app.route('/upload', methods=['POST'])
 def upload():
