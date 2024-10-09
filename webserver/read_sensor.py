@@ -10,10 +10,10 @@ app = Flask(__name__)
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
-desired_min_temp = 0
-desired_max_temp = 100
-desired_min_humi = 0
-desired_max_humi = 100
+desired_min_temp = 0.0
+desired_max_temp = 100.0
+desired_min_humi = 0.0
+desired_max_humi = 100.0
 
 def get_sensor_data():
     return {
@@ -57,20 +57,16 @@ def upload():
     global desired_max_humi
 
     if 'minTemp' in request.form:
-        desired_min_temp = request.form.get('minTemp')
-        print("received min temp: " + desired_min_temp)
+        desired_min_temp = float(request.form.get('minTemp'))
         return jsonify({'message': 'desire min temp received successful'})
     elif 'maxTemp' in request.form:
-        desired_max_temp = request.form.get('maxTemp')
-        print("received max temp: " + desired_max_temp)
+        desired_max_temp = float(request.form.get('maxTemp'))
         return jsonify({'message': 'desire max temp received successful'})
     elif 'minHumi' in request.form:
-        desired_min_humi = request.form.get('minHumi')
-        print("received min humi: " + desired_min_humi)
+        desired_min_humi = float(request.form.get('minHumi'))
         return jsonify({'message': 'desire min humi received successful'})
     else:
-        desired_max_humi = request.form.get('maxHumi')
-        print("received max humi: " + desired_max_humi)
+        desired_max_humi = float(request.form.get('maxHumi'))
         return jsonify({'message': 'desire max humi received successful'})
 
 @app.route('/')

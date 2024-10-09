@@ -77,31 +77,49 @@ function updateTime() {
     document.getElementById('date').textContent = dateString;
 }
 
-async function handleFormSubmission(event, fieldName) {
-        event.preventDefault();  // Prevent the default form submission
-
-        const formData = new FormData();
-
-        // Dynamically append the field based on the provided field name
-        formData.append(fieldName, document.getElementById(fieldName).value);
-
-        try {
-            const response = await fetch(window.location.href + 'upload', {
-                method: 'POST',
-                body: formData
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                console.log('desire value setting successful: ' + JSON.stringify(result));
-            } else {
-                alert('Failed to set desired value');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while setting desired value');
-        }
+function updateDesiredValue(fieldName, desiredValue) {
+    if (fieldName == 'minTemp') {
+        document.getElementById('minTempSpan').textContent = "The current minimum desired temperature is:" + desiredValue
     }
+    else if (fieldName == 'maxTemp') {
+        document.getElementById('maxTempSpan').textContent = "The current maximum desired temperature is:" + desiredValue
+    }
+    else if (fieldName == 'minHumi') {
+        document.getElementById('minHumiSpan').textContent = "The current minimum desired humidity is:" + desiredValue
+    }
+    else {
+        document.getElementById('maxHumiSpan').textContent = "The current maximum desired humidity is:" + desiredValue
+    }
+}
+
+//set desired value
+async function handleFormSubmission(event, fieldName) {
+    event.preventDefault();  // Prevent the default form submission
+
+    const formData = new FormData();
+    const desiredValue = document.getElementById(fieldName).value
+
+    // Dynamically append the field based on the provided field name
+    formData.append(fieldName, desiredValue);
+
+    try {
+        const response = await fetch(window.location.href + 'upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('desire value setting successful: ' + JSON.stringify(result));
+            updateDesiredValue(fieldName, desiredValue)
+        } else {
+            alert('Failed to set desired value');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while setting desired value');
+    }
+}
 
 // Fetch sensor data and update every 5 minutes
 fetchCurrentSensorData();
