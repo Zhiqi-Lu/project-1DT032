@@ -32,10 +32,10 @@ def record_sensor_data():
     while True:
         data = get_sensor_data()
         # Maintain only 144 data points (5-minute intervals for 12 hours)
-        if len(data_history) >= 144:
+        if len(data_history) >= 720:
             data_history.pop(0)  # Remove the oldest data point
         data_history.append(data)
-        time.sleep(300)  # Sleep for 5 minutes
+        time.sleep(60)  # Sleep for 5 minutes
 
 @app.route('/sensor')
 def get_current_sensor_data():
