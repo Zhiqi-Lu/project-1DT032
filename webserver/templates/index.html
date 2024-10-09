@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Condition Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</head>
+<body>
+    <h1>Plant Condition Dashboard</h1>
+    <div class="container">
+        <!-- Left Column for Plant Conditions -->
+        <div class="left">
+            <div class="condition-block">
+                <h2 id="time"></h2>
+                <p id="date"></p>
+                <p id="temperature">Temperature: --°C</p>
+                <p id="humidity">Humidity: --%</p>
+                <p id="intensity">Pressure: -- hPa</p>
+            </div>
+        </div>
+
+        <!-- Right Column for Charts -->
+        <div class="right">
+            <section class="charts-section">
+                <div class="chart-container">
+                    <h3>Temperature</h3>
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Humidity</h3>
+                    <canvas id="humidityChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>Light Intensity</h3>
+                    <canvas id="PressureChart"></canvas>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>
