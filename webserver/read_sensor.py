@@ -53,19 +53,19 @@ def read_last_12_hours():
     else:
         return []
 
-# Function to record data every 5 minutes
+# Function to record data every minutes
 def record_sensor_data():
     global data_history
     data_history = read_last_12_hours()  # Load the last 12 hours of data
 
     while True:
         data = get_sensor_data()
-        # Maintain only 144 data points (5-minute intervals for 12 hours)
+        # Maintain 720 data points (1-minute intervals for 12 hours)
         if len(data_history) >= 720:
             data_history.pop(0)  # Remove the oldest data point
         data_history.append(data)
         save_to_json(data)
-        time.sleep(60)  # Sleep for 5 minutes
+        time.sleep(60)  # Sleep for 1 minutes
 
 @app.route('/sensor')
 def get_current_sensor_data():
@@ -77,6 +77,7 @@ def get_sensor_history():
     # Return the last 12 hours of sensor data
     return jsonify(data_history)
 
+# get whether current reading is out of desired range set by the user
 @app.route('/tolerance')
 def get_tolerance():
     global desired_min_temp
@@ -105,6 +106,7 @@ def get_desired_values():
         'minHumi': desired_min_humi,
         'maxHumi': desired_max_humi})
 
+# update desired temperature and humidity range
 @app.route('/upload', methods=['POST'])
 def upload():
     global desired_min_temp

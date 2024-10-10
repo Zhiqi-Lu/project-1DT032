@@ -183,10 +183,10 @@ async function handleFormSubmission(event, fieldName) {
 fetchCurrentSensorData();
 fetchSensorHistory();
 fetchDesiredValue();
-setInterval(fetchCurrentSensorData, 300000); // Refresh every 5 minutes
-setInterval(fetchAlert, 300000)
-setInterval(fetchSensorHistory, 300000);     // Refresh chart data every 5 minutes
-setInterval(updateTime, 1000);               // Update time every second
+setInterval(fetchCurrentSensorData, 60000); // Refresh every minute
+setInterval(fetchAlert, 60000) // check backend whether there are any alert every minute
+setInterval(fetchSensorHistory, 60000); // Refresh chart data every minute
+setInterval(updateTime, 1000); // Update time every second
 window.onload=function(){
     document.getElementById('uploadMinTemp').addEventListener('submit', function(event) {
         handleFormSubmission(event, 'minTemp');
