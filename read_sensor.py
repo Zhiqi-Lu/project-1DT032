@@ -1,30 +1,29 @@
 import json
-import time
-from threading import Thread
-from flask import Flask, jsonify, render_template_string, render_template, request
 import os
 
+from flask import Flask, jsonify, render_template_string, render_template, request
+from sense_hat import SenseHat
+import time
+from threading import Thread
 
 app = Flask(__name__)
+sense = SenseHat()
 
 # Store data for the last 12 hours (5-minute intervals = 144 data points)
 data_history = []
+desired_min_temp = -1.0
+desired_max_temp = -1.0
+desired_min_humi = -1.0
+desired_max_humi = -1.0
 json_file_path = 'sensor_data.json'
 
 def get_sensor_data():
-    # Simulated sensor data for testing
     return {
-        'temperature': 10.11,
-        'humidity': 20.22,
-        'intensity': 1069,  # Assuming pressure as intensity
+        'temperature': round(sense.get_temperature(), 2),
+        'humidity': round(sense.get_humidity(), 2),
+        'intensity': round(sense.get_pressure(), 2),  # Assuming pressure as intensity
         'timestamp': time.time()
     }
- # return {
-    #     'temperature': round(sense.get_temperature(), 2),
-    #     'humidity': round(sense.get_humidity(), 2),
-    #     'intensity': round(sense.get_pressure(), 2),  # Assuming pressure as intensity
-    #     'timestamp': time.time()
-    # }
 
 def save_to_json(data):
     # Save data to JSON file (append mode)
@@ -54,18 +53,19 @@ def read_last_12_hours():
     else:
         return []
 
+# Function to record data every minutes
 def record_sensor_data():
     global data_history
     data_history = read_last_12_hours()  # Load the last 12 hours of data
 
     while True:
         data = get_sensor_data()
-        # Maintain only 144 data points (5-minute intervals for 12 hours)
-        if len(data_history) >= 144:
+        # Maintain 720 data points (1-minute intervals for 12 hours)
+        if len(data_history) >= 720:
             data_history.pop(0)  # Remove the oldest data point
         data_history.append(data)
-        save_to_json(data)  # Save new data to JSON file
-        time.sleep(300)  # Sleep for 5 minutes
+        save_to_json(data)
+        time.sleep(60)  # Sleep for 1 minutes
 
 @app.route('/sensor')
 def get_current_sensor_data():
@@ -77,6 +77,7 @@ def get_sensor_history():
     # Return the last 12 hours of sensor data
     return jsonify(data_history)
 
+# get whether current reading is out of desired range set by the user
 @app.route('/tolerance')
 def get_tolerance():
     global desired_min_temp
@@ -105,6 +106,7 @@ def get_desired_values():
         'minHumi': desired_min_humi,
         'maxHumi': desired_max_humi})
 
+# update desired temperature and humidity range
 @app.route('/upload', methods=['POST'])
 def upload():
     global desired_min_temp
@@ -141,8 +143,8 @@ def upload():
 def index():
     return render_template('index.html')
 
-
 if __name__ == '__main__':
     # Run the server and record data
     Thread(target=record_sensor_data).start()
     app.run(host='0.0.0.0', port=5000)
+
